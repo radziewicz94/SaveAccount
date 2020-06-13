@@ -11,8 +11,9 @@ public class DataReader {
     private Scanner sc = new Scanner(System.in);
     private Account[] accounts = new Account[2];
     private int countAccount = 0;
-    double balance = 0;
-    double interestRate = 0;
+    private double balance = 0;
+    private double interestRate = 0;
+
     public double getDouble(){
         Double number;
         try {

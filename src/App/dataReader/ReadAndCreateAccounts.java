@@ -7,9 +7,9 @@ import model.InvestmentAccount;
 public class ReadAndCreateAccounts {
 
     private static final int MAX_ACCOUNT = 2;
-    DataReader dataReader = new DataReader();
-    Account[] accounts = new Account[MAX_ACCOUNT];
-    public static int count = 0;
+    private DataReader dataReader = new DataReader();
+    private Account[] accounts = new Account[MAX_ACCOUNT];
+    private int count = 0;
 
     public void addBankAccount(BankAccount bankAccount) {
         if (count >= MAX_ACCOUNT) {
@@ -49,7 +49,7 @@ public class ReadAndCreateAccounts {
     }
     public void printInvestmentAccount() {
         int invCount = 0;
-        for (int i = 0; i < ReadAndCreateAccounts.count; i++) {
+        for (int i = 0; i < count; i++) {
             if(accounts[i] instanceof InvestmentAccount){
                 System.out.println(accounts[i].toString());
                 invCount++;

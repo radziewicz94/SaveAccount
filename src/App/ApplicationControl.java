@@ -13,7 +13,7 @@ public class ApplicationControl {
     DataReader dataReader = new DataReader();
     ReadAndCreateAccounts readAndCreateAccounts = new ReadAndCreateAccounts();
 
-    public void loopControl() {
+    private void loopControl() {
         int option = -1;
         do {
 
@@ -42,21 +42,21 @@ public class ApplicationControl {
         } while (option != 0);
 
     }
-    public void addAccount(){
+    private void addAccount(){
         BankAccount bankAccount = dataReader.addBankAccount();
         readAndCreateAccounts.addBankAccount(bankAccount);
     }
-    public void addInvestment(){
+    private void addInvestment(){
         InvestmentAccount investmentAccount = dataReader.addInvestmentAccount();
         readAndCreateAccounts.addInvestmentAccount(investmentAccount);
     }
-    public void printAllAccounts(){
+    private void printAllAccounts(){
         readAndCreateAccounts.printAllAccount();
     }
-    public void printAccount(){
+    private void printAccount(){
         readAndCreateAccounts.printBankAccount();
     }
-    public void printInvestment(){
+    private void printInvestment(){
         readAndCreateAccounts.printInvestmentAccount();
     }
     private void printOption() {
