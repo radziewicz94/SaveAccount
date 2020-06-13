@@ -1,7 +1,9 @@
 package App;
 
 import App.dataReader.DataReader;
-import org.w3c.dom.ls.LSOutput;
+import App.dataReader.ReadAndCreateAccounts;
+import model.BankAccount;
+import model.InvestmentAccount;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -9,47 +11,85 @@ import java.util.Scanner;
 public class ApplicationControl {
     Scanner sc = new Scanner(System.in);
     DataReader dataReader = new DataReader();
+    ReadAndCreateAccounts readAndCreateAccounts = new ReadAndCreateAccounts();
 
     public void loopControl() {
         int option = -1;
-        do{
+        do {
 
-            switch(getOption()){
+            switch (getOption()) {
                 case EXIT:
                     System.out.println("Wychodzę z programu");
                     option = 0;
+                    break;
+                case ADD_BANK_ACCOUNT:
+                    addAccount();
+                    break;
+                case ADD_INVESTMENT_ACCOUNT:
+                    addInvestment();
+                    break;
+                case PRINT_ALL_ACCOUNT:
+                    printAllAccounts();
+                    break;
+                case PRINT_ALL_BANK_ACCOUNT:
+                    printAccount();
+                    break;
+                case PRINT_ALL_INVESTMENT_ACCOUNT:
+                    printInvestment();
+                case ADD_MONEY_TO_BANK_ACCOUNT:
+                    break;
             }
-        }while(option != 0);
+        } while (option != 0);
 
+    }
+    public void addAccount(){
+        BankAccount bankAccount = dataReader.addBankAccount();
+        readAndCreateAccounts.addBankAccount(bankAccount);
+    }
+    public void addInvestment(){
+        InvestmentAccount investmentAccount = dataReader.addInvestmentAccount();
+        readAndCreateAccounts.addInvestmentAccount(investmentAccount);
+    }
+    public void printAllAccounts(){
+        readAndCreateAccounts.printAllAccount();
+    }
+    public void printAccount(){
+        readAndCreateAccounts.printBankAccount();
+    }
+    public void printInvestment(){
+        readAndCreateAccounts.printInvestmentAccount();
     }
     private void printOption() {
         System.out.println("Dostępne opcje");
-        for (Option option: Option.values()) {
+        for (Option option : Option.values()) {
             System.out.println(option);
         }
     }
-    private Option getOption(){
+
+    private Option getOption() {
         boolean isOk = false;
         Option option = null;
-        while(!isOk){
+        while (!isOk) {
             printOption();
             System.out.println("Podaj opcję");
             try {
                 option = Option.getEnumFromInt(dataReader.getInt());
                 isOk = true;
-            }catch (ArrayIndexOutOfBoundsException e){
+            } catch (ArrayIndexOutOfBoundsException | InputMismatchException e) {
                 System.out.println(e.getMessage());
-            }catch(RuntimeException e){
-                System.out.println(e.getMessage());
-                dataReader.getLine();
             }
         }
         return option;
     }
 
     private enum Option {
-        EXIT(0,"Wyjście z programu"),
-        STARTING_BALANCE(1, "Saldo początkowe");
+        EXIT(0, "Wyjście z programu"),
+        ADD_BANK_ACCOUNT(1, "Dodaj konto bankowe"),
+        ADD_INVESTMENT_ACCOUNT(2, "Dodaj konto inwestycyjne"),
+        PRINT_ALL_ACCOUNT(3, "Wyświetl konta"),
+        PRINT_ALL_BANK_ACCOUNT(4, "Wyświetl wsztkie konta bankowe"),
+        PRINT_ALL_INVESTMENT_ACCOUNT(5, "Wyświetl wsztkie konta inwestycyjne"),
+        ADD_MONEY_TO_BANK_ACCOUNT(6, "Dodaj pieniądze do istniejącego konta bankowego");
 
         private int value;
         private String description;
@@ -63,15 +103,15 @@ public class ApplicationControl {
         public String toString() {
             return value + " - " + description;
         }
+
         static Option getEnumFromInt(int option) throws ArrayIndexOutOfBoundsException, InputMismatchException {
             Option[] options = Option.values();
-            try{
+            try {
                 return options[option];
-            }catch (ArrayIndexOutOfBoundsException e){
+            } catch (ArrayIndexOutOfBoundsException e) {
                 throw new ArrayIndexOutOfBoundsException("Brak opcji o id " + option);
-            }catch (RuntimeException e){
-                throw new RuntimeException("Podaj liczbe a nie litere");
             }
         }
     }
+
 }
