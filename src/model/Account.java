@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Objects;
+
 public abstract class Account {
         private String firstName;
         private String lastName;
@@ -35,4 +37,18 @@ public abstract class Account {
         this.pesel = pesel;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Account)) return false;
+        Account account = (Account) o;
+        return Objects.equals(firstName, account.firstName) &&
+                Objects.equals(lastName, account.lastName) &&
+                Objects.equals(pesel, account.pesel);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(firstName, lastName, pesel);
+    }
 }

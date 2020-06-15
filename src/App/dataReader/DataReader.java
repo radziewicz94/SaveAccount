@@ -3,6 +3,7 @@ package App.dataReader;
 import model.Account;
 import model.InvestmentAccount;
 import model.BankAccount;
+import model.Plan;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -54,7 +55,7 @@ public class DataReader {
             System.out.println(e.getMessage());
         }
 
-        return new BankAccount(firstName, lastName, pesel, bank, accountNumber, balance);
+        return new BankAccount(firstName, lastName, pesel, bank, balance);
     }
     public InvestmentAccount addInvestmentAccount(){
         System.out.println("Podaj imie właściciela konta");
@@ -63,6 +64,8 @@ public class DataReader {
         String lastName = sc.nextLine();
         System.out.println("Podaj pesel właściciela konta");
         String pesel = sc.nextLine();
+        System.out.println("Podaj numer konta");
+        String accountNumber = sc.nextLine();
         System.out.println("Podaj konto inwestycjne");
         String account = sc.nextLine();
         System.out.println("Podaj kwotę odłożona na lokatę");
@@ -75,5 +78,15 @@ public class DataReader {
         }
 
         return new InvestmentAccount(firstName, lastName, pesel, account, balance, interestRate);
+    }
+    public Plan savingsPlan(){
+        System.out.println("Podaj na co zbierasz");
+        String plan = sc.nextLine();
+        System.out.println("Ile musisz zebrac");
+        double goal = getDouble();
+        System.out.println("Ile odkładasz miesięcznie");
+        double save = getDouble();
+
+        return new Plan(plan, goal, save);
     }
 }

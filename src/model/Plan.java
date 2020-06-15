@@ -3,30 +3,18 @@ package model;
 public class Plan {
     private String plan;
     private double goal;
+    private double saveMoney;
 
-    public Plan(String plan, double goal) {
+    public Plan(String plan, double goal, double saveMoney) {
         this.plan = plan;
         this.goal = goal;
+        this.saveMoney = saveMoney;
+    }
+    public void printGoal(){
+        System.out.println("Zbieram na " + plan + ", muszę uzbierać " + goal + ", miesięcznie odkładam " + saveMoney);
+        double months = goal / saveMoney;
+
+        System.out.println("Będziesz zbierał: " + months);
     }
 
-    public String getPlan() {
-        return plan;
-    }
-
-    public void setPlan(String plan) {
-        this.plan = plan;
-    }
-
-    public double getGoal() {
-        return goal;
-    }
-
-    public void setGoal(double goal) {
-        this.goal = goal;
-    }
-
-    @Override
-    public String toString() {
-        return "Cel " + plan + ", do uzbierania " + goal;
-    }
 }
