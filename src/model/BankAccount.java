@@ -1,13 +1,20 @@
 package model;
 
+import java.util.Objects;
+
 public class BankAccount extends Account {
         private String bankAccount;
-        private double saveMoney;
+        public final static String TYPE = "Konto bankowe";
 
-    public BankAccount(String firstName, String lastName, String pesel, String bankAccount, double saveMoney) {
-        super(firstName, lastName, pesel);
+    @Override
+    public void addSaveMoney(double money) {
+        setSaveMoney(getSaveMoney() + money);
+    }
+
+
+    public BankAccount(String firstName, String lastName, String pesel, String accountNumber, double saveMoney, String bankAccount) {
+        super(firstName, lastName, pesel, accountNumber, saveMoney);
         this.bankAccount = bankAccount;
-        this.saveMoney = saveMoney;
     }
 
     public String getBankAccount() {
@@ -18,16 +25,28 @@ public class BankAccount extends Account {
         this.bankAccount = bankAccount;
     }
 
-    public double getSaveMoney() {
-        return saveMoney;
-    }
 
-    public void setSaveMoney(double saveMoney) {
-        this.saveMoney = saveMoney;
+    @Override
+    public String toCsv() {
+        return TYPE + ";" + getFirstName() + ";" + getLastName() + ";" + getPesel() + ";" +
+                bankAccount + ";" + getSaveMoney() + ";" + getBankAccount() + ";";
+    }
+    @Override
+    public String toString(){
+        return "Konto bankowe " + bankAccount + ", zaoszczędzone pieniądze : " + getSaveMoney();
     }
 
     @Override
-    public String toString(){
-        return "Konto bankowe " + bankAccount + ", zaoszczędzone pieniądze : " + saveMoney;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof BankAccount)) return false;
+        if (!super.equals(o)) return false;
+        BankAccount that = (BankAccount) o;
+        return Objects.equals(bankAccount, that.bankAccount);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), bankAccount);
     }
 }

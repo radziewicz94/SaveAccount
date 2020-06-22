@@ -10,11 +10,11 @@ public class Plan {
         this.goal = goal;
         this.saveMoney = saveMoney;
     }
-    public void printGoal(){
-        System.out.println("Zbieram na " + plan + ", muszę uzbierać " + goal + ", miesięcznie odkładam " + saveMoney);
+
+    public String toString(){
         double months = goal / saveMoney;
 
-        System.out.println("Będziesz zbierał: " + months);
+        return  "Zbieram na " + plan + ", muszę uzbierać " + goal + ", miesięcznie odkładam " + saveMoney +"\n"
+                + "Będziesz zbierał: " + Math.round(months) + " miesięcy";
     }
-
 }

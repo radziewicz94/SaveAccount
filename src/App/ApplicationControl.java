@@ -1,21 +1,21 @@
 package App;
 
 import App.dataReader.DataReader;
-import App.dataReader.ReadAndCreateAccounts;
+import App.dataReader.MyAccounts;
+import App.dataReader.printer.ConsolePrinter;
 import model.Account;
 import model.BankAccount;
 import model.InvestmentAccount;
-import model.Plan;
-
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class ApplicationControl {
     Scanner sc = new Scanner(System.in);
-    DataReader dataReader = new DataReader();
-    int count = 0;
-    ReadAndCreateAccounts readAndCreateAccounts = new ReadAndCreateAccounts();
-    private Account account;
+    ConsolePrinter consolePrinter = new ConsolePrinter();
+    DataReader dataReader = new DataReader(consolePrinter);
+    MyAccounts myAccounts = new MyAccounts();
+    private  Account account;
+
 
     protected void loopControl() {
         int option = -1;
@@ -35,14 +35,14 @@ public class ApplicationControl {
                 case PRINT_ALL_ACCOUNT:
                     printAllAccounts();
                     break;
-               /* case PRINT_ALL_BANK_ACCOUNT:
-                    printAccount();
-                    break;*/
-                /*case PRINT_ALL_INVESTMENT_ACCOUNT:
-                    printInvestment();*/
-                case PRINT_ALL_INVESTMENT_ACCOUNT:
+                case PRINT_BANK_ACCOUNTS:
+                    printBankAccounts();
+                    break;
+                case PRINT_INVESTMENT_ACCOUNTS:
+                    printInvestmentAccount();
                     break;
                 case ADD_MONEY_TO_BANK_ACCOUNT:
+                    addSaveMoneyToBankAccount();
                     break;
                 case GOAL:
                     addPlan();
@@ -56,28 +56,40 @@ public class ApplicationControl {
         } while (option != 0);
 
     }
+
+    private void addSaveMoneyToBankAccount() {
+        consolePrinter.print("Ile pieniędzy chce dodać");
+        double money = dataReader.getDouble();
+        consolePrinter.print("Podaj dane konta na które chcesz przelać oszczędności");
+        String accNumber = sc.nextLine();
+        myAccounts.addMoney(accNumber, money);
+
+    }
+
+
     private void addAccount(){
         BankAccount bankAccount = dataReader.addBankAccount();
-        String pesel = bankAccount.getPesel();
-        readAndCreateAccounts.addAccount(bankAccount, pesel);
+        String accNumber = bankAccount.getAccountNumber();
+        myAccounts.addAccount(bankAccount);
 
     }
+
     private void addInvestment(){
         InvestmentAccount investmentAccount = dataReader.addInvestmentAccount();
-        String pesel = investmentAccount.getPesel();
-        readAndCreateAccounts.addAccount(investmentAccount, pesel);
+        String accNumber = investmentAccount.getAccountNumber();
+        myAccounts.addAccount(investmentAccount);
 
     }
-    private void printAllAccounts(){
-        readAndCreateAccounts.printAllAccount();
+    private void printAllAccounts() {
+        consolePrinter.printAllAccounts(myAccounts.getAccounts().values());
     }
-   /* private void printAccount(){
+    private void printBankAccounts(){
+        consolePrinter.printBankAccount(myAccounts.getAccounts().values());
+    }
+    private void printInvestmentAccount(){
+        consolePrinter.printInvestmentAccount(myAccounts.getAccounts().values());
+    }
 
-        readAndCreateAccounts.printBankAccount(account.getPesel());
-    }*/
-   /* private void printInvestment(){
-        readAndCreateAccounts.printInvestmentAccount();
-    }*/
     private void printOption() {
         System.out.println("Dostępne opcje");
         for (Option option : Option.values()) {
@@ -85,11 +97,11 @@ public class ApplicationControl {
         }
     }
     private void addPlan(){
-        readAndCreateAccounts.addPlan(dataReader.savingsPlan());
+        myAccounts.addPlan(dataReader.savingsPlan());
 
     }
     private void printPlan(){
-        readAndCreateAccounts.printPlan();
+        myAccounts.printPlan();
     }
 
     private Option getOption() {
@@ -112,12 +124,12 @@ public class ApplicationControl {
         EXIT(0, "Wyjście z programu"),
         ADD_BANK_ACCOUNT(1, "Dodaj konto bankowe"),
         ADD_INVESTMENT_ACCOUNT(2, "Dodaj konto inwestycyjne"),
-        PRINT_ALL_ACCOUNT(3, "Wyświetl konta"),
-        PRINT_ALL_BANK_ACCOUNT(4, "Wyświetl wsztkie konta bankowe"),
-        PRINT_ALL_INVESTMENT_ACCOUNT(5, "Wyświetl wsztkie konta inwestycyjne"),
+        PRINT_ALL_ACCOUNT(3, "Wyświetl wszystkie konta"),
+        PRINT_BANK_ACCOUNTS(4, "Wyświetl konta bankowe"),
+        PRINT_INVESTMENT_ACCOUNTS(5, "Wyświetl konta inwestycyjne"),
         ADD_MONEY_TO_BANK_ACCOUNT(6, "Dodaj pieniądze do istniejącego konta bankowego"),
         GOAL(7, "Dodaj cel do uzbierania"),
-        RATE(8, "Wyświetl cele");
+        RATE(6, "Wyświetl cele");
 
         private int value;
         private String description;

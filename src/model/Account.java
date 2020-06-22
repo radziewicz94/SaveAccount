@@ -6,11 +6,37 @@ public abstract class Account {
         private String firstName;
         private String lastName;
         private String pesel;
+        private String accountNumber;
+        private double saveMoney;
 
-    public Account(String firstName, String lastName, String pesel) {
+    public Account(String accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+
+    public Account(String firstName, String lastName, String pesel, String accountNumber, double saveMoney) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.pesel = pesel;
+        this.accountNumber = accountNumber;
+        this.saveMoney = saveMoney;
+    }
+
+    public double getSaveMoney() {
+        return saveMoney;
+    }
+
+    public void setSaveMoney(double saveMoney) {
+        this.saveMoney = saveMoney;
+    }
+    public abstract void addSaveMoney(double money);
+
+
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
     }
 
     public String getFirstName() {
@@ -37,6 +63,7 @@ public abstract class Account {
         this.pesel = pesel;
     }
 
+    public abstract String toCsv();
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

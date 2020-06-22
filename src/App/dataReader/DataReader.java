@@ -1,20 +1,21 @@
 package App.dataReader;
 
-import model.Account;
+import App.dataReader.printer.ConsolePrinter;
 import model.InvestmentAccount;
 import model.BankAccount;
 import model.Plan;
-
-import java.util.InputMismatchException;
+import java.util.InputMismatchException;;
 import java.util.Scanner;
 
 public class DataReader {
     private Scanner sc = new Scanner(System.in);
-    private Account[] accounts = new Account[2];
-    private int countAccount = 0;
     private double balance = 0;
     private double interestRate = 0;
-
+    private ConsolePrinter consolePrinter;
+    
+    public DataReader(ConsolePrinter consolePrinter){
+        this.consolePrinter = consolePrinter;
+    }
     public double getDouble(){
         Double number;
         try {
@@ -38,53 +39,56 @@ public class DataReader {
         }
     }
     public BankAccount addBankAccount(){
-        System.out.println("Podaj imie właściciela konta");
+        consolePrinter.print("Podaj imie właściciela konta");
         String firstName = sc.nextLine();
-        System.out.println("Podaj nazwisko");
+        consolePrinter.print("Podaj nazwisko właściciela konta");
         String lastName = sc.nextLine();
-        System.out.println("Podaj pesel właściciela konta");
+        consolePrinter.print("Podaj pesel właściciela konta");
         String pesel = sc.nextLine();
-        System.out.println("Podaj nazwę banku");
+        consolePrinter.print("Podaj nazwę banku");
         String bank = sc.nextLine();
-        System.out.println("Podaj nr konta");
+        consolePrinter.print("Podaj numer konta");
         String accountNumber = sc.nextLine();
         try {
-            System.out.println("Podaj kwotę którą zaoszczędziłeś");
+            consolePrinter.print("Podaj kwotę którą zaoszczędziłeś");
             balance = getDouble();
         }catch (InputMismatchException e){
-            System.out.println(e.getMessage());
+            consolePrinter.print(e.getMessage());
         }
 
-        return new BankAccount(firstName, lastName, pesel, bank, balance);
+
+        return new BankAccount(firstName, lastName, pesel, accountNumber, balance, bank);
     }
+
     public InvestmentAccount addInvestmentAccount(){
-        System.out.println("Podaj imie właściciela konta");
+        consolePrinter.print("Podaj imie właściciela konta");
         String firstName = sc.nextLine();
-        System.out.println("Podaj nazwisko");
+        consolePrinter.print("Podaj nazwisko właściciela konta");
         String lastName = sc.nextLine();
-        System.out.println("Podaj pesel właściciela konta");
+        consolePrinter.print("Podaj pesel właściciela konta");
         String pesel = sc.nextLine();
-        System.out.println("Podaj numer konta");
+        consolePrinter.print("Podaj numer konta");
         String accountNumber = sc.nextLine();
-        System.out.println("Podaj konto inwestycjne");
-        String account = sc.nextLine();
-        System.out.println("Podaj kwotę odłożona na lokatę");
         try {
-        double balance = getDouble();
-        System.out.println("Podaj oprocentowanie lokaty");
+        consolePrinter.print("Podaj kwotę odłożona na lokatę");
+        balance = getDouble();
+        consolePrinter.print("Podaj oprocentowanie lokaty");
             interestRate = getDouble();
         }catch (InputMismatchException e){
-            System.out.println(e.getMessage());
+            consolePrinter.print(e.getMessage());
         }
+        consolePrinter.print("Podaj nazwę konta inwestycjne");
+        String account = sc.nextLine();
 
-        return new InvestmentAccount(firstName, lastName, pesel, account, balance, interestRate);
+        return new InvestmentAccount(firstName, lastName, pesel, accountNumber,balance, account, interestRate);
     }
+
     public Plan savingsPlan(){
-        System.out.println("Podaj na co zbierasz");
+        consolePrinter.print("Podaj na co zbierasz");
         String plan = sc.nextLine();
-        System.out.println("Ile musisz zebrac");
+        consolePrinter.print("Ile musisz zebrac");
         double goal = getDouble();
-        System.out.println("Ile odkładasz miesięcznie");
+        consolePrinter.print("Ile odkładasz miesięcznie");
         double save = getDouble();
 
         return new Plan(plan, goal, save);

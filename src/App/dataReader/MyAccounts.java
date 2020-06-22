@@ -1,6 +1,6 @@
 package App.dataReader;
 
-import App.dataReader.printer.Println;
+import App.dataReader.printer.ConsolePrinter;
 import exception.AccountNumberExsistException;
 import model.Account;
 
@@ -8,44 +8,49 @@ import model.Plan;
 
 import java.util.*;
 
-public class ReadAndCreateAccounts {
+public class MyAccounts {
 
-    //private static final int MAX_ACCOUNT = 2;
-    private DataReader dataReader = new DataReader();
-    private List<Account> accounts = new LinkedList<>();
+    private Map<String, Account> accounts = new HashMap<>();
     private List<Plan> lista = new LinkedList<>();
-    private int count = 0;
-    Scanner sc = new Scanner(System.in);
-    Println println;
+    ConsolePrinter consolePrinter = new ConsolePrinter();
 
-    public void addAccount(Account account){
-        if(accounts.contains(account)){
+    public void addAccount( Account account) {
+        if (accounts.equals(account.getAccountNumber())) {
             throw new AccountNumberExsistException("Konto o takim numerze już istnieje " + account.getAccountNumber());
         }
-        accounts.add(account);
+        accounts.put(account.getAccountNumber(), account);
     }
 
-    public void printAllAccount() {
-        Println.print("Ilość kont " + accounts.size());
-        for (Account account : accounts) {
-            println.print(account.toString());
-        }
+    public Map<String, Account> getAccounts() {
+        return accounts;
     }
 
-    public void addMoney(double money, Account account){
-        System.out.println("Podaj nr konta");
-        sc.nextLine();
-      //  if(accounts.contains(accounts.))
-
+    public List<Plan> getLista() {
+        return lista;
     }
-    public void addPlan(Plan plan){
+
+    public void addMoney(String accNumber, double money) {
+        String result = "Konto o takim numerze nie istnieje";
+                    for (Map.Entry<String, Account> entry : accounts.entrySet())
+                if (accounts.containsKey(accNumber)) {
+                    Account account = entry.getValue();
+                    account.setSaveMoney(money);
+
+                    result = "Prawidłowo dodano środki na konto";
+                }
+
+        consolePrinter.print(result);
+    }
+
+    public void addPlan(Plan plan) {
         lista.add(plan);
-       // return lista;
+        // return lista;
     }
-    public void printPlan(){
+
+    public void printPlan() {
         lista.size();
         for (int i = 0; i < lista.size(); i++) {
-            System.out.println(lista.get(i).toString());
+            consolePrinter.print(lista.get(i).toString());
 
         }
     }
