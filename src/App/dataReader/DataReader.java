@@ -38,6 +38,10 @@ public class DataReader {
             throw new InputMismatchException("Zły format danych");
         }
     }
+    public String getString(){
+        String text = sc.nextLine();
+        return text;
+    }
     public BankAccount addBankAccount(){
         consolePrinter.print("Podaj imie właściciela konta");
         String firstName = sc.nextLine();

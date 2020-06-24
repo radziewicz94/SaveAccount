@@ -3,13 +3,14 @@ package App.dataReader.file;
 import App.ApplicationControl;
 import App.dataReader.MyAccounts;
 import App.dataReader.printer.ConsolePrinter;
+import exception.DataExportException;
 import exception.DataImportException;
+import exception.InvalidTypeException;
 import model.Account;
 import model.BankAccount;
 import model.InvestmentAccount;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.Collection;
 import java.util.Scanner;
 
@@ -17,8 +18,8 @@ public class CsvFileManager implements FileManager{
     private static final String CSV_FILE_NAME = "Accounts.csv";
     ConsolePrinter consolePrinter = new ConsolePrinter();
     @Override
-    public void importDate(MyAccounts myAccounts) {
-
+    public MyAccounts importDate() {
+        MyAccounts myAccounts = new MyAccounts();
         try(Scanner sc = new Scanner(new File(CSV_FILE_NAME)))
         {
             while(sc.hasNext()){
@@ -29,6 +30,7 @@ public class CsvFileManager implements FileManager{
         }catch (FileNotFoundException e){
             throw new DataImportException("Nie udało się zaimportować danych z pliku " + CSV_FILE_NAME);
         }
+        return new MyAccounts();
     }
     private Account createAccountFromCsv(String fromCsv) {
         String[] split = fromCsv.split(";");
@@ -36,8 +38,9 @@ public class CsvFileManager implements FileManager{
         if(BankAccount.TYPE.equals(type)){
             return createBankAccount(split);
         }else if(InvestmentAccount.TYPE.equals(type)){
-            createInvestmentAccount(split);
+            return createInvestmentAccount(split);
         }
+        throw new InvalidTypeException("Nieznany typ konta " + type);
     }
 
     private InvestmentAccount createInvestmentAccount(String[] split) {
@@ -66,8 +69,16 @@ public class CsvFileManager implements FileManager{
 
     @Override
     public void exportDate(MyAccounts myAccounts) {
-        Collection<MyAccounts>  importAcc =
-        try(Sc)
-        return null;
+        Collection<Account> importAcc = myAccounts.getAccounts().values();
+        String line =  null;
+        try(    var FileWriter = new FileWriter(CSV_FILE_NAME);
+                var BufferedWriter = new BufferedWriter(FileWriter);){
+            for (Account account : importAcc) {
+                BufferedWriter.write(account.toCsv());
+                BufferedWriter.newLine();
+            }
+        }catch (IOException e){
+            throw new DataExportException("Nie udało sie odczytać pliku " + CSV_FILE_NAME);
+        }
     }
 }

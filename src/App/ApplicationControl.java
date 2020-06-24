@@ -2,7 +2,11 @@ package App;
 
 import App.dataReader.DataReader;
 import App.dataReader.MyAccounts;
+import App.dataReader.file.CsvFileManager;
+import App.dataReader.file.FileManager;
+import App.dataReader.file.ReadFile;
 import App.dataReader.printer.ConsolePrinter;
+import exception.DataImportException;
 import model.Account;
 import model.BankAccount;
 import model.InvestmentAccount;
@@ -11,12 +15,23 @@ import java.util.Scanner;
 
 public class ApplicationControl {
     Scanner sc = new Scanner(System.in);
-    ConsolePrinter consolePrinter = new ConsolePrinter();
-    DataReader dataReader = new DataReader(consolePrinter);
-    MyAccounts myAccounts = new MyAccounts();
+    ConsolePrinter consolePrinter;
+    DataReader dataReader;
+    MyAccounts myAccounts;
     private  Account account;
+    FileManager fileManager;
 
-
+    ApplicationControl() {
+        fileManager = new ReadFile(dataReader, consolePrinter).chooseOption();
+        try {
+            myAccounts = fileManager.importDate();
+            consolePrinter.print("Zaimportowane dane z pliku");
+        } catch (DataImportException e) {
+            consolePrinter.print(e.getMessage());
+            consolePrinter.print("Zainicjowano nową bazę.");
+            myAccounts = new MyAccounts();
+        }
+    }
     protected void loopControl() {
         int option = -1;
         do {
