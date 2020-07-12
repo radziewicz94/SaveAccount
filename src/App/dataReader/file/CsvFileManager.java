@@ -15,19 +15,28 @@ import java.util.Collection;
 import java.util.Scanner;
 
 public class CsvFileManager implements FileManager{
-    private static final String CSV_FILE_NAME = "Accounts.csv";
-    ConsolePrinter consolePrinter = new ConsolePrinter();
-    @Override
-    public MyAccounts importDate() {
+    private static final String CSV_FILE_NAME = "C://Users/xerci/SaveAccount/Accounts.csv";
+
+
+    public MyAccounts importDate(){
         MyAccounts myAccounts = new MyAccounts();
-        try(Scanner sc = new Scanner(new File(CSV_FILE_NAME)))
+        importAccounts(myAccounts);
+
+        return myAccounts;
+    }
+
+    public MyAccounts importAccounts(MyAccounts myAccounts) {
+        try(
+                FileReader file = new FileReader(CSV_FILE_NAME);
+                Scanner sc = new Scanner(file))
         {
-            while(sc.hasNext()){
-                String line = sc.nextLine();
-                Account account = createAccountFromCsv(line);
-                myAccounts.addAccount(account);
-            }
-        }catch (FileNotFoundException e){
+                while (sc.hasNext()) {
+                    String line = sc.nextLine();
+                    Account account = createAccountFromCsv(line);
+                    myAccounts.addAccount(account);
+                }
+
+        }catch (IOException e) {
             throw new DataImportException("Nie udało się zaimportować danych z pliku " + CSV_FILE_NAME);
         }
         return new MyAccounts();
@@ -78,7 +87,7 @@ public class CsvFileManager implements FileManager{
                 BufferedWriter.newLine();
             }
         }catch (IOException e){
-            throw new DataExportException("Nie udało sie odczytać pliku " + CSV_FILE_NAME);
+            throw new DataExportException("Nie udało sie zapisac pliku " + CSV_FILE_NAME);
         }
     }
 }

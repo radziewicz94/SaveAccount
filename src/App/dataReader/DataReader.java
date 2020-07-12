@@ -11,11 +11,8 @@ public class DataReader {
     private Scanner sc = new Scanner(System.in);
     private double balance = 0;
     private double interestRate = 0;
-    private ConsolePrinter consolePrinter;
-    
-    public DataReader(ConsolePrinter consolePrinter){
-        this.consolePrinter = consolePrinter;
-    }
+
+
     public double getDouble(){
         Double number;
         try {
@@ -43,21 +40,21 @@ public class DataReader {
         return text;
     }
     public BankAccount addBankAccount(){
-        consolePrinter.print("Podaj imie właściciela konta");
+        ConsolePrinter.print("Podaj imie właściciela konta");
         String firstName = sc.nextLine();
-        consolePrinter.print("Podaj nazwisko właściciela konta");
+        ConsolePrinter.print("Podaj nazwisko właściciela konta");
         String lastName = sc.nextLine();
-        consolePrinter.print("Podaj pesel właściciela konta");
+        ConsolePrinter.print("Podaj pesel właściciela konta");
         String pesel = sc.nextLine();
-        consolePrinter.print("Podaj nazwę banku");
+        ConsolePrinter.print("Podaj nazwę banku");
         String bank = sc.nextLine();
-        consolePrinter.print("Podaj numer konta");
+        ConsolePrinter.print("Podaj numer konta");
         String accountNumber = sc.nextLine();
         try {
-            consolePrinter.print("Podaj kwotę którą zaoszczędziłeś");
+            ConsolePrinter.print("Podaj kwotę którą zaoszczędziłeś");
             balance = getDouble();
         }catch (InputMismatchException e){
-            consolePrinter.print(e.getMessage());
+            ConsolePrinter.print(e.getMessage());
         }
 
 
@@ -65,36 +62,39 @@ public class DataReader {
     }
 
     public InvestmentAccount addInvestmentAccount(){
-        consolePrinter.print("Podaj imie właściciela konta");
+        ConsolePrinter.print("Podaj imie właściciela konta");
         String firstName = sc.nextLine();
-        consolePrinter.print("Podaj nazwisko właściciela konta");
+        ConsolePrinter.print("Podaj nazwisko właściciela konta");
         String lastName = sc.nextLine();
-        consolePrinter.print("Podaj pesel właściciela konta");
+        ConsolePrinter.print("Podaj pesel właściciela konta");
         String pesel = sc.nextLine();
-        consolePrinter.print("Podaj numer konta");
+        ConsolePrinter.print("Podaj numer konta");
         String accountNumber = sc.nextLine();
         try {
-        consolePrinter.print("Podaj kwotę odłożona na lokatę");
+            ConsolePrinter.print("Podaj kwotę odłożona na lokatę");
         balance = getDouble();
-        consolePrinter.print("Podaj oprocentowanie lokaty");
+            ConsolePrinter.print("Podaj oprocentowanie lokaty");
             interestRate = getDouble();
         }catch (InputMismatchException e){
-            consolePrinter.print(e.getMessage());
+            ConsolePrinter.print(e.getMessage());
         }
-        consolePrinter.print("Podaj nazwę konta inwestycjne");
+        ConsolePrinter.print("Podaj nazwę konta inwestycjne");
         String account = sc.nextLine();
 
         return new InvestmentAccount(firstName, lastName, pesel, accountNumber,balance, account, interestRate);
     }
 
     public Plan savingsPlan(){
-        consolePrinter.print("Podaj na co zbierasz");
+        ConsolePrinter.print("Podaj na co zbierasz");
         String plan = sc.nextLine();
-        consolePrinter.print("Ile musisz zebrac");
+        ConsolePrinter.print("Ile musisz zebrac");
         double goal = getDouble();
-        consolePrinter.print("Ile odkładasz miesięcznie");
+        ConsolePrinter.print("Ile odkładasz miesięcznie");
         double save = getDouble();
 
         return new Plan(plan, goal, save);
+    }
+    public void close(){
+        sc.close();
     }
 }

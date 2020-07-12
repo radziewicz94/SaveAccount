@@ -3,11 +3,9 @@ package App;
 import App.dataReader.DataReader;
 import App.dataReader.MyAccounts;
 import App.dataReader.file.CsvFileManager;
-import App.dataReader.file.FileManager;
-import App.dataReader.file.ReadFile;
 import App.dataReader.printer.ConsolePrinter;
-import exception.DataImportException;
-import model.Account;
+import exception.AccountNumberExsistException;
+import exception.DataExportException;
 import model.BankAccount;
 import model.InvestmentAccount;
 import java.util.InputMismatchException;
@@ -15,30 +13,17 @@ import java.util.Scanner;
 
 public class ApplicationControl {
     Scanner sc = new Scanner(System.in);
-    ConsolePrinter consolePrinter;
-    DataReader dataReader;
-    MyAccounts myAccounts;
-    private  Account account;
-    FileManager fileManager;
+    DataReader dataReader = new DataReader();
+    MyAccounts myAccounts = new MyAccounts();
+    CsvFileManager csvFileManager = new CsvFileManager();
 
-    ApplicationControl() {
-        fileManager = new ReadFile(dataReader, consolePrinter).chooseOption();
-        try {
-            myAccounts = fileManager.importDate();
-            consolePrinter.print("Zaimportowane dane z pliku");
-        } catch (DataImportException e) {
-            consolePrinter.print(e.getMessage());
-            consolePrinter.print("Zainicjowano nową bazę.");
-            myAccounts = new MyAccounts();
-        }
-    }
     protected void loopControl() {
         int option = -1;
         do {
 
             switch (getOption()) {
                 case EXIT:
-                    System.out.println("Wychodzę z programu");
+                    exitProgram();
                     option = 0;
                     break;
                 case ADD_BANK_ACCOUNT:
@@ -65,6 +50,9 @@ public class ApplicationControl {
                 case RATE:
                     printPlan();
                     break;
+                case IMPORT_FILE_FROM_CSV:
+                    importFromCsv();
+                    break;
                 default:
                     throw new IllegalStateException("Unexpected value: " + getOption());
             }
@@ -73,9 +61,9 @@ public class ApplicationControl {
     }
 
     private void addSaveMoneyToBankAccount() {
-        consolePrinter.print("Ile pieniędzy chce dodać");
+        ConsolePrinter.print("Ile pieniędzy chcesz dodać");
         double money = dataReader.getDouble();
-        consolePrinter.print("Podaj dane konta na które chcesz przelać oszczędności");
+        ConsolePrinter.print("Podaj nr konta na które chcesz przelać oszczędności");
         String accNumber = sc.nextLine();
         myAccounts.addMoney(accNumber, money);
 
@@ -83,30 +71,39 @@ public class ApplicationControl {
 
 
     private void addAccount(){
-        BankAccount bankAccount = dataReader.addBankAccount();
-        String accNumber = bankAccount.getAccountNumber();
-        myAccounts.addAccount(bankAccount);
+        try {
+            BankAccount bankAccount = dataReader.addBankAccount();
+            myAccounts.addAccount(bankAccount);
+        }catch (AccountNumberExsistException e){
+            ConsolePrinter.print(e.getMessage());
+        }
 
     }
 
     private void addInvestment(){
-        InvestmentAccount investmentAccount = dataReader.addInvestmentAccount();
-        String accNumber = investmentAccount.getAccountNumber();
-        myAccounts.addAccount(investmentAccount);
+        try {
+            InvestmentAccount investmentAccount = dataReader.addInvestmentAccount();
+            myAccounts.addAccount(investmentAccount);
+        }catch (AccountNumberExsistException e){
+            ConsolePrinter.print(e.getMessage());
+        }
 
     }
     private void printAllAccounts() {
-        consolePrinter.printAllAccounts(myAccounts.getAccounts().values());
+        ConsolePrinter.printAllAccounts(myAccounts.getAccounts().values());
     }
     private void printBankAccounts(){
-        consolePrinter.printBankAccount(myAccounts.getAccounts().values());
+        ConsolePrinter.printBankAccount(myAccounts.getAccounts().values());
     }
     private void printInvestmentAccount(){
-        consolePrinter.printInvestmentAccount(myAccounts.getAccounts().values());
+        ConsolePrinter.printInvestmentAccount(myAccounts.getAccounts().values());
     }
-
+    private void importFromCsv(){
+        csvFileManager.importAccounts(myAccounts);
+        ConsolePrinter.print("Zaimportowane dane z pliku");
+    }
     private void printOption() {
-        System.out.println("Dostępne opcje");
+        ConsolePrinter.print("Dostępne opcje");
         for (Option option : Option.values()) {
             System.out.println(option);
         }
@@ -119,12 +116,22 @@ public class ApplicationControl {
         myAccounts.printPlan();
     }
 
+    private void exitProgram() {
+        try {
+            csvFileManager.exportDate(myAccounts);
+            ConsolePrinter.print("Export danych do pliku zakończony powodzeniem");
+        } catch (DataExportException e) {
+            ConsolePrinter.print(e.getMessage());
+        }
+        dataReader.close();
+        ConsolePrinter.print("Zamykam program");
+    }
     private Option getOption() {
         boolean isOk = false;
         Option option = null;
         while (!isOk) {
             printOption();
-            System.out.println("Podaj opcję");
+            ConsolePrinter.print("Podaj opcję");
             try {
                 option = Option.getEnumFromInt(dataReader.getInt());
                 isOk = true;
@@ -144,7 +151,8 @@ public class ApplicationControl {
         PRINT_INVESTMENT_ACCOUNTS(5, "Wyświetl konta inwestycyjne"),
         ADD_MONEY_TO_BANK_ACCOUNT(6, "Dodaj pieniądze do istniejącego konta bankowego"),
         GOAL(7, "Dodaj cel do uzbierania"),
-        RATE(6, "Wyświetl cele");
+        RATE(8, "Wyświetl cele"),
+        IMPORT_FILE_FROM_CSV(9, "Import z pliku csv");
 
         private int value;
         private String description;

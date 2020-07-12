@@ -15,8 +15,8 @@ public class MyAccounts {
     ConsolePrinter consolePrinter = new ConsolePrinter();
 
     public void addAccount( Account account) {
-        if (accounts.equals(account.getAccountNumber())) {
-            throw new AccountNumberExsistException("Konto o takim numerze już istnieje " + account.getAccountNumber());
+        if (accounts.containsKey(account.getAccountNumber())) {
+            throw new AccountNumberExsistException("Konto o numerze" + account.getAccountNumber() + " już istnieje ");
         }
         accounts.put(account.getAccountNumber(), account);
     }
@@ -34,7 +34,7 @@ public class MyAccounts {
                     for (Map.Entry<String, Account> entry : accounts.entrySet())
                 if (accounts.containsKey(accNumber)) {
                     Account account = entry.getValue();
-                    account.setSaveMoney(money);
+                    account.setSaveMoney(account.getSaveMoney() + money);
 
                     result = "Prawidłowo dodano środki na konto";
                 }
