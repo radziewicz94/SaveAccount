@@ -65,7 +65,8 @@ public class ApplicationControl {
         double money = dataReader.getDouble();
         ConsolePrinter.print("Podaj nr konta na które chcesz przelać oszczędności");
         String accNumber = sc.nextLine();
-        myAccounts.addMoney(accNumber, money);
+
+        myAccounts.addMoney(money, accNumber);
 
     }
 

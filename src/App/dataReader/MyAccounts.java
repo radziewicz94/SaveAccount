@@ -4,15 +4,15 @@ import App.dataReader.printer.ConsolePrinter;
 import exception.AccountNumberExsistException;
 import model.Account;
 
+import model.MoneyManager;
 import model.Plan;
 
 import java.util.*;
 
-public class MyAccounts {
+public class MyAccounts implements MoneyManager {
 
     private Map<String, Account> accounts = new HashMap<>();
     private List<Plan> lista = new LinkedList<>();
-    ConsolePrinter consolePrinter = new ConsolePrinter();
 
     public void addAccount( Account account) {
         if (accounts.containsKey(account.getAccountNumber())) {
@@ -29,17 +29,11 @@ public class MyAccounts {
         return lista;
     }
 
-    public void addMoney(String accNumber, double money) {
-        String result = "Konto o takim numerze nie istnieje";
-                    for (Map.Entry<String, Account> entry : accounts.entrySet())
-                if (accounts.containsKey(accNumber)) {
-                    Account account = entry.getValue();
-                    account.setSaveMoney(account.getSaveMoney() + money);
+    public Map<String, Account> accountMap(String accNumber){
+        Collection<Account> account = accountMap(accNumber).values();
+        System.out.println(account);
 
-                    result = "Prawidłowo dodano środki na konto";
-                }
-
-        consolePrinter.print(result);
+        return null;
     }
 
     public void addPlan(Plan plan) {
@@ -50,8 +44,24 @@ public class MyAccounts {
     public void printPlan() {
         lista.size();
         for (int i = 0; i < lista.size(); i++) {
-            consolePrinter.print(lista.get(i).toString());
+            ConsolePrinter.print(lista.get(i).toString());
 
         }
+    }
+
+    @Override
+    public void addMoney(double money, String accNumber) {
+        String result = "Konto o takim numerze nie istnieje";
+        Collection<Account> collection = accounts.values();
+        Iterator<Account> account = collection.iterator();
+        while (account.hasNext()){
+            Account account1 = account.next();
+            if(account1.getAccountNumber().equals(accNumber)) {
+                System.out.println(account1);
+                account1.setSaveMoney(money);
+            }
+
+        }
+        ConsolePrinter.print(result);
     }
 }

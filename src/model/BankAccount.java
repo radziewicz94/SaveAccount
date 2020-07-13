@@ -6,11 +6,6 @@ public class BankAccount extends Account {
         private String bankAccount;
         public final static String TYPE = "Konto bankowe";
 
-    @Override
-    public void addSaveMoney(double money) {
-        setSaveMoney(getSaveMoney() + money);
-    }
-
 
     public BankAccount(String firstName, String lastName, String pesel, String accountNumber, double saveMoney, String bankAccount) {
         super(firstName, lastName, pesel, accountNumber, saveMoney);
@@ -33,7 +28,7 @@ public class BankAccount extends Account {
     }
     @Override
     public String toString(){
-        return "Konto bankowe " + bankAccount + ", zaoszczędzone pieniądze : " + getSaveMoney();
+        return "Konto bankowe: " + bankAccount + " numer konta " + getAccountNumber() + ", zaoszczędzone pieniądze : " + getSaveMoney();
     }
 
     @Override

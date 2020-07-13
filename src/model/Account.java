@@ -25,11 +25,10 @@ public abstract class Account {
         return saveMoney;
     }
 
-    public void setSaveMoney(double saveMoney) {
-        this.saveMoney = saveMoney;
+    public double setSaveMoney(double saveMoney) {
+        this.saveMoney = getSaveMoney() + saveMoney;
+        return saveMoney;
     }
-    public abstract void addSaveMoney(double money);
-
 
     public String getAccountNumber() {
         return accountNumber;

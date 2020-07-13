@@ -5,11 +5,6 @@ public class InvestmentAccount extends Account{
         private double interestedRate;
         public static final String TYPE = "Lokata";
 
-    @Override
-    public void addSaveMoney(double money) {
-        setSaveMoney(getSaveMoney() + money);
-    }
-
     public InvestmentAccount(String firstName, String lastName, String pesel, String accountNumber,
                              double saveMoney, String accountName, double interestedRate) {
         super(firstName, lastName, pesel, accountNumber, saveMoney);
@@ -39,6 +34,6 @@ public class InvestmentAccount extends Account{
     }
     @Override
     public String toString(){
-        return "Konto inwestycyjne " + accountName + ", z oprocentowaniem " + interestedRate + ", odłożone pieniądze: " + getSaveMoney();
+        return "Konto inwestycyjne " + accountName + " numer konta " + getAccountNumber() + ", z oprocentowaniem " + interestedRate + ", odłożone pieniądze: " + getSaveMoney();
     }
 }
